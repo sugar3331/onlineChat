@@ -98,19 +98,3 @@ func (j *VoteJwt) ImJwtAuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
 		next(w, r.WithContext(ctx))
 	}
 }
-
-// RefreshToken 通过 refresh token 刷新 access token
-//func (j *VoteJwt) RefreshToken(a, r string) (aToken, rToken string, err error) {
-//	// r 无效直接返回
-//	if _, err = jwt.Parse(r, j.keyFunc); err != nil {
-//		return
-//	}
-//	// 从旧access token 中解析出claims数据
-//	claim := &Claim{}
-//	_, err = jwt.ParseWithClaims(a, claim, j.keyFunc)
-//	// 判断错误是不是因为access token 正常过期导致的
-//	if errors.Is(err, jwt.ErrTokenExpired) {
-//		return j.GetToken(claim.ID, claim.UserName, claim.Name, claim.Role)
-//	}
-//	return
-//}
