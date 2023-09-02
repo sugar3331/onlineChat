@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        #container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #messages {
+            height: 300px;
+            overflow-y: scroll;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+
+        #inputMessage {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            margin-bottom: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: #008cba;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: #006d8b;
+        }
+
+        .user {
+            cursor: pointer;
+            color: blue;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <div id="messages"></div>
+    <input type="text" id="inputMessage" />
+    <button onclick="sendMessage()">Send</button>
+</div>
+
+<script>
+    const socket = new WebSocket("ws://localhost:9090/publicChat");
+    const messagesDiv = document.getElementById("messages");
+    const inputMessage = document.getElementById("inputMessage");
+
+    //WebSocket 连接建立后的回调函数。在该回调函数中，打印一条消息到控制台表示连接已经打开。
+    socket.onopen = function(event) {
+        console.log("WebSocket connection opened.");
+    };
+
+    //WebSocket 接收到消息时的回调函数。在该回调函数中，将接收到的消息添加到网页上显示出来。
+    socket.onmessage = function(event) {
+        console.log(event.data)
+        const data = JSON.parse(event.data);
+        const message = data.Message;
+        const username = data.Username;
+        const userid = data.Userid;
+
+        console.log("Received message:", message);
+        // 将接收到的消息添加到网页上
+        messagesDiv.innerHTML += `<div>[<span class="user" onclick="startP2P('${userid}', '${username}')">${userid} - ${username}</span>] ${message}</div>`;
+    };
+
+    //WebSocket 连接关闭后的回调函数。在该回调函数中，打印一条消息到控制台表示连接已经关闭。
+    socket.onclose = function(event) {
+        console.log("WebSocket connection closed.");
+    };
+
+    function sendMessage() {
+        const message = inputMessage.value;
+        if (message) {
+            // 发送消息给服务器
+            socket.send(message);
+
+            // 清空输入框
+            inputMessage.value = "";
+        }
+    }
+
+    function startP2P(userid, username) {
+        console.log(`Start peer-to-peer communication with ${userid} (${username})...`);
+
+        // 建立WebSocket连接
+        const socket = new WebSocket("ws://localhost:9090/publicChat?Userid=" + userid);
+
+        // 监听连接打开事件
+        socket.onopen = function () {
+            console.log("WebSocket connection is open.");
+
+            // 在这里可以发送初始消息或执行其他操作
+        };
+
+        // 监听收到消息事件
+        socket.onmessage = function (event) {
+            const message = event.data;
+            console.log(`Received message: ${message}`);
+
+            // 在这里处理收到的消息
+        };
+
+        // 监听连接关闭事件
+        socket.onclose = function () {
+            console.log("WebSocket connection is closed.");
+
+            // 在这里可以执行清理操作或提示用户连接已关闭
+        };
+
+        // 监听发生错误事件
+        socket.onerror = function (error) {
+            console.error("WebSocket error:", error);
+
+            // 在这里可以处理错误，并进行相应的提示或重试逻辑
+        };
+
+        // 这里只是一个示例，您需要根据实际需求自行实现点对点连接的逻辑
+    }
+</script>
+</body>
+</html>
