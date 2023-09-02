@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	//修改一下
+	//修改一下拉拉
 	http.HandleFunc("/publicChat", tools.Token.ImJwtAuthMiddleware(im.HandIeWebSocket))
 	http.HandleFunc("/p2pChat", tools.Token.ImJwtAuthMiddleware(im.HandleP2PChat))
 	log.Println("IM Websocket Starting server at: 9090...")
