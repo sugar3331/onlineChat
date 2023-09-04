@@ -4,9 +4,16 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dacecc57-ccdf-400f-b52a-20d22c42c0e3" name="更改" comment="">
+    <list default="true" id="dacecc57-ccdf-400f-b52a-20d22c42c0e3" name="更改" comment="2">
+      <change afterPath="$PROJECT_DIR$/static/login.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/handler/login.go" beforeDir="false" afterPath="$PROJECT_DIR$/handler/login.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/handler/websocket.go" beforeDir="false" afterPath="$PROJECT_DIR$/handler/websocket.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/chat.html" beforeDir="false" afterPath="$PROJECT_DIR$/static/chat.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/jwt.go" beforeDir="false" afterPath="$PROJECT_DIR$/tools/jwt.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,31 +24,41 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Go Application" />
+        <option value="Go File" />
       </list>
     </option>
   </component>
   <component name="GOROOT" url="file://$PROJECT_DIR$/../../../Program Files/Go" />
   <component name="Git.Settings">
+    <option name="PUSH_TAGS">
+      <GitPushTagMode>
+        <option name="argument" value="--tags" />
+        <option name="title" value="All" />
+      </GitPushTagMode>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2Up7CRqG8dK8WdbmKo6Ws8k1Qun" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "DefaultGoTemplateProperty": "Go Application",
+    "DefaultGoTemplateProperty": "Go File",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.go.formatter.settings.were.checked": "true",
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
     "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "正在合并 master",
+    "git-widget-placeholder": "master",
     "go.import.settings.migrated": "true",
     "last_opened_file_path": "C:/Project/Nine/OnlineChat/tools",
     "node.js.detected.package.eslint": "true",
@@ -97,6 +114,11 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="ad" />
+    <MESSAGE value="2" />
+    <option name="LAST_COMMIT_MESSAGE" value="2" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

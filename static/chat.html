@@ -67,17 +67,25 @@
 </div>
 
 <script>
+
+    //下面是建立websocket连接
     const socket = new WebSocket("ws://localhost:9090/publicChat");
     const messagesDiv = document.getElementById("messages");
     const inputMessage = document.getElementById("inputMessage");
 
+    const socketAccessToken = localStorage.getItem("Authorization");
+    console.log("AccessToken: ", socketAccessToken);
+
     //WebSocket 连接建立后的回调函数。在该回调函数中，打印一条消息到控制台表示连接已经打开。
     socket.onopen = function(event) {
         console.log("WebSocket connection opened.");
+        socket.send("Authorization: " + socketAccessToken);
     };
 
     //WebSocket 接收到消息时的回调函数。在该回调函数中，将接收到的消息添加到网页上显示出来。
     socket.onmessage = function(event) {
+
+
         console.log(event.data)
         const data = JSON.parse(event.data);
         const message = data.Message;

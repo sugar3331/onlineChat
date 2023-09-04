@@ -1,11 +1,14 @@
 package im
 
 import (
+	"OnlineChat/tools"
 	"fmt"
 	"github.com/gorilla/websocket"
+	"html/template"
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 	"sync"
 )
 
@@ -32,6 +35,22 @@ type fullMessage struct {
 	Userid   int64
 }
 
+func HandleChat(w http.ResponseWriter, r *http.Request) {
+	// 解析前端界面的HTML模板
+	tmpl, err := template.ParseFiles("./static/chat.html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// 渲染界面模板，并将其写入响应中
+	err = tmpl.Execute(w, nil)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
 // HandIeWebSocket 客户端连接到公共聊天室接口
 func HandIeWebSocket(w http.ResponseWriter, r *http.Request) {
 	//升级http连接为WebSocket连接
@@ -42,8 +61,12 @@ func HandIeWebSocket(w http.ResponseWriter, r *http.Request) {
 	}
 	defer conn.Close()
 
-	userid := r.Context().Value("userID").(int64)
-	username := r.Context().Value("userName").(string)
+	_, ahthmsg, err := conn.ReadMessage()
+	authjwt := strings.TrimPrefix(string(ahthmsg), "Authorization: ")
+	userid, username, err := tools.Token.ImJwtAuthMiddleware(authjwt)
+	if err != nil {
+		return
+	}
 
 	// 创建 Client 结构体，并将连接和用户名保存其中
 	client := &Client{

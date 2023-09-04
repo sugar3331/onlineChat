@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>登录界面</title>
+</head>
+<body>
+<h1>登录</h1>
+<input type="text" id="usernameInput" placeholder="用户名" />
+<input type="password" id="passwordInput" placeholder="密码" />
+<button onclick="login()">登录</button>
+
+<script>
+    function login() {
+        const username = document.getElementById("usernameInput").value;
+        const password = document.getElementById("passwordInput").value;
+
+        // 构造要发送的 JSON 数据
+        const data = {
+            username: username,
+            password: password
+        };
+
+        fetch("/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(result => {
+                if (result.code === 0) { // 登录成功
+                    alert("登录成功");
+
+                    const accessToken = result.data.access_token;
+                    // 存储 AccessToken 到本地存储
+                    localStorage.setItem("Authorization", `${accessToken}`);
+                    console.log("AccessToken: ", accessToken);
+                    // 跳转到聊天界面，并带上Authorization参数
+                        window.location.href = "http://127.0.0.1:9090/chat";
+                } else { // 登录失败
+                    alert("登录失败");
+                }
+            })
+            .catch(error => {
+                console.error("登录时出现错误:", error);
+            });
+    }
+</script>
+</body>
+</html>

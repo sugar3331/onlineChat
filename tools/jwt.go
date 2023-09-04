@@ -1,10 +1,8 @@
 package tools
 
 import (
-	"context"
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
-	"net/http"
 	"time"
 )
 
@@ -67,34 +65,24 @@ func (j *VoteJwt) GetToken(id int64, userName string, name string, role string) 
 }
 
 // ImJwtAuthMiddleware 用户单独聊天室的权限验证服务
-func (j *VoteJwt) ImJwtAuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		claim := &Claim{}
-		tokenStr := r.Header.Get("Authorization")
-		if tokenStr == "" {
-			http.Error(w, "Authorization header required", http.StatusUnauthorized)
-			fmt.Println("Im验证权限失败")
-			return
-		}
-		token, err := jwt.ParseWithClaims(tokenStr, claim, func(token *jwt.Token) (interface{}, error) {
-			bytes := []byte(TokenIssuer)
-			return bytes, nil
-		})
-		if err != nil {
-			http.Error(w, "ErrInvalid token", http.StatusUnauthorized)
-
-			fmt.Println("Im验证权限失败")
-			return
-		}
-		if !token.Valid {
-			http.Error(w, "ErrInvalid token", http.StatusUnauthorized)
-			fmt.Println("Im验证权限失败")
-			return
-		}
-		ctx := r.Context()
-
-		ctx = context.WithValue(ctx, "userID", claim.ID)
-		ctx = context.WithValue(ctx, "userName", claim.UserName)
-		next(w, r.WithContext(ctx))
+func (j *VoteJwt) ImJwtAuthMiddleware(tokenStr string) (userid int64, username string, err error) {
+	claim := &Claim{}
+	if tokenStr == "" {
+		fmt.Println("Im验证权限失败")
+		return 0, "", err
 	}
+	token, err := jwt.ParseWithClaims(tokenStr, claim, func(token *jwt.Token) (interface{}, error) {
+		bytes := []byte(TokenIssuer)
+		return bytes, nil
+	})
+	if err != nil {
+		fmt.Println("Im验证权限失败")
+		return 0, "", err
+	}
+	if !token.Valid {
+		fmt.Println("Im验证权限失败")
+		return 0, "", err
+	}
+
+	return claim.ID, claim.UserName, nil
 }
