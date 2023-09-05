@@ -3,6 +3,7 @@ package tools
 import (
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
+	"strconv"
 	"time"
 )
 
@@ -65,11 +66,11 @@ func (j *VoteJwt) GetToken(id int64, userName string, name string, role string) 
 }
 
 // ImJwtAuthMiddleware 用户单独聊天室的权限验证服务
-func (j *VoteJwt) ImJwtAuthMiddleware(tokenStr string) (userid int64, username string, err error) {
+func (j *VoteJwt) ImJwtAuthMiddleware(tokenStr string) (userid, username string, err error) {
 	claim := &Claim{}
 	if tokenStr == "" {
 		fmt.Println("Im验证权限失败")
-		return 0, "", err
+		return "", "", err
 	}
 	token, err := jwt.ParseWithClaims(tokenStr, claim, func(token *jwt.Token) (interface{}, error) {
 		bytes := []byte(TokenIssuer)
@@ -77,12 +78,12 @@ func (j *VoteJwt) ImJwtAuthMiddleware(tokenStr string) (userid int64, username s
 	})
 	if err != nil {
 		fmt.Println("Im验证权限失败")
-		return 0, "", err
+		return "", "", err
 	}
 	if !token.Valid {
 		fmt.Println("Im验证权限失败")
-		return 0, "", err
+		return "", "", err
 	}
-
-	return claim.ID, claim.UserName, nil
+	userid = strconv.Itoa(int(claim.ID))
+	return userid, claim.UserName, nil
 }

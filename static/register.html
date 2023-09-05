@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>注册页面</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<h1>注册页面</h1>
+<form id="registerForm" onsubmit="register(event)">
+    <label for="username">账号：</label>
+    <input type="text" id="username" name="username" required><br>
+
+    <label for="password">密码：</label>
+    <input type="password" id="password" name="password" required><br>
+
+    <label for="name">昵称：</label>
+    <input type="text" id="name" name="name" required><br>
+
+    <input type="submit" value="注册">
+</form>
+
+<script>
+    function register(event) {
+        event.preventDefault(); // 阻止表单提交
+
+        var form = document.getElementById("registerForm");
+        var jsonData = {
+            "username": form.username.value,
+            "password": form.password.value,
+            "name": form.name.value
+        };
+
+        axios.post("/register", jsonData)
+            .then(function (response) {
+                alert(response.data.message);
+                if (response.data.code === 0){
+                    window.location.href = "http://127.0.0.1:9090/login";
+                }
+                // 根据返回的状态码跳转到登录页面或其他操作
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+</script>
+</body>
+</html>

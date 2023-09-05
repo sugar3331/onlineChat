@@ -9,7 +9,7 @@
 <input type="text" id="usernameInput" placeholder="用户名" />
 <input type="password" id="passwordInput" placeholder="密码" />
 <button onclick="login()">登录</button>
-
+<button onclick="goToRegisterPage()">没有账号？去注册</button>
 <script>
     function login() {
         const username = document.getElementById("usernameInput").value;
@@ -38,7 +38,7 @@
                     localStorage.setItem("Authorization", `${accessToken}`);
                     console.log("AccessToken: ", accessToken);
                     // 跳转到聊天界面，并带上Authorization参数
-                        window.location.href = "http://127.0.0.1:9090/chat";
+                        window.location.href = "http://127.0.0.1:9090/publicChat";
                 } else { // 登录失败
                     alert("登录失败");
                 }
@@ -46,6 +46,10 @@
             .catch(error => {
                 console.error("登录时出现错误:", error);
             });
+    }
+
+    function goToRegisterPage() {
+        window.location.href = "http://127.0.0.1:9090/register";
     }
 </script>
 </body>

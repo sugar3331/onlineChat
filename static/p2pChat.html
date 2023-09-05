@@ -2,88 +2,99 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>WebSocket Example</title>
+    <title>Chat Interface</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            background-color: #f2f2f2;
         }
 
-        #container {
+        .container {
             max-width: 600px;
-            margin: auto;
+            margin: 20px auto;
             padding: 20px;
             background-color: #fff;
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            color: #333333;
         }
 
-        #messages {
+        .messages {
             height: 300px;
             overflow-y: scroll;
-            margin-bottom: 10px;
             padding: 10px;
-            background-color: #f0f0f0;
+            background-color: #f9f9f9;
             border-radius: 5px;
         }
 
-        #inputMessage {
+        .inputMessage {
             width: 100%;
             padding: 10px;
             border-radius: 5px;
             border: none;
             margin-bottom: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            color: #333333;
         }
 
-        button {
+        .sendButton {
             display: block;
             width: 100%;
             padding: 10px;
             border-radius: 5px;
             border: none;
             background-color: #008cba;
-            color: #fff;
+            color: #ffffff;
             font-weight: bold;
             cursor: pointer;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
         }
 
-        button:hover {
+        .sendButton:hover {
             background-color: #006d8b;
         }
 
         .user {
             cursor: pointer;
-            color: blue;
-            text-decoration: underline;
+            color: #008cba;
+            text-decoration: none;
         }
     </style>
 </head>
 <body>
-<p style="text-align: center;">欢迎来到鹰之旅项目聊天室😎，点击对方名字和id可以私聊😊</p>
-<div id="container">
-    <div id="messages"></div>
-    <input type="text" id="inputMessage" />
-    <button onclick="sendMessage()">Send</button>
+<p style="text-align: center;">项目优化中，目前仅支持在线聊天，且无历史消息🤗</p>
+<div class="container">
+    <div class="messages" id="messages"></div>
+    <input type="text" class="inputMessage" id="inputMessage" />
+    <button class="sendButton" onclick="sendMessage()">Send</button>
 </div>
 
 <script>
     const socketAccessToken = localStorage.getItem("Authorization");
     console.log("AccessToken: ", socketAccessToken);
+    // 获取当前请求的URL
+    var url = new URL(window.location.href);
 
-    //下面是建立websocket连接
-    const socket = new WebSocket("ws://localhost:9090/publicChatHandler?token="+socketAccessToken);
+    // 解析URL参数
+    var params = new URLSearchParams(url.search);
+
+    // 获取userid参数的值
+    var taruserid = params.get("taruserid");
+
+    console.log(taruserid); // 输出userid参数的值
+
+    // 下面是建立websocket连接
+    const socket = new WebSocket("ws://localhost:9090/p2pChatHandler?taruserid="+taruserid+"&token="+socketAccessToken);
     const messagesDiv = document.getElementById("messages");
     const inputMessage = document.getElementById("inputMessage");
 
-
-    //WebSocket 连接建立后的回调函数。在该回调函数中，打印一条消息到控制台表示连接已经打开。
+    // WebSocket 连接建立后的回调函数。在该回调函数中，打印一条消息到控制台表示连接已经打开。
     socket.onopen = function(event) {
         console.log("WebSocket connection opened.");
     };
 
-    //WebSocket 接收到消息时的回调函数。在该回调函数中，将接收到的消息添加到网页上显示出来。
+    // WebSocket 接收到消息时的回调函数。在该回调函数中，将接收到的消息添加到网页上显示出来。
     socket.onmessage = function(event) {
         console.log(event.data)
         const data = JSON.parse(event.data);
@@ -93,10 +104,15 @@
 
         console.log("Received message:", message);
         // 将接收到的消息添加到网页上
-        messagesDiv.innerHTML += `<div>[<span class="user" onclick="startP2P('${userid}', '${username}')">${userid} - ${username}</span>] ${message}</div>`;
+        messagesDiv.innerHTML += `
+          <div>
+            [<a class="user" href="#" onclick="startP2P('${userid}', '${username}')">${userid} - ${username}</a>]
+            ${message}
+          </div>`;
+        scrollToBottom();
     };
 
-    //WebSocket 连接关闭后的回调函数。在该回调函数中，打印一条消息到控制台表示连接已经关闭。
+    // WebSocket 连接关闭后的回调函数。在该回调函数中，打印一条消息到控制台表示连接已经关闭。
     socket.onclose = function(event) {
         console.log("WebSocket connection closed.");
     };
@@ -109,6 +125,7 @@
 
             // 清空输入框
             inputMessage.value = "";
+            scrollToBottom();
             messagesDiv.innerHTML += `
           <div>
             [我]:
@@ -117,8 +134,8 @@
         }
     }
 
-    function startP2P(taruserid, tarusername) {
-        window.location.href = "http://127.0.0.1:9090/p2pChat?taruserid="+taruserid;
+    function scrollToBottom() {
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
 </script>
 </body>

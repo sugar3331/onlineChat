@@ -8,10 +8,12 @@ import (
 
 func main() {
 	im.NewMysqlInit()
-	http.HandleFunc("/publicChat", im.HandIeWebSocket)
-	http.HandleFunc("/p2pChat", im.HandleP2PChat)
+	http.HandleFunc("/publicChatHandler", im.PublicChatHandler)
+	http.HandleFunc("/p2pChatHandler", im.P2PChatHandler)
 	http.HandleFunc("/login", im.Login)
-	http.HandleFunc("/chat", im.HandleChat)
+	http.HandleFunc("/register", im.Register)
+	http.HandleFunc("/publicChat", im.PublicChat)
+	http.HandleFunc("/p2pChat", im.P2pChat)
 	log.Println("IM Websocket Starting server at: 9090...")
 	err := http.ListenAndServe(":9090", nil)
 	if err != nil {
