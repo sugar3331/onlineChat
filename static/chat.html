@@ -56,9 +56,12 @@
         .user {
             cursor: pointer;
             color: blue;
-            text-decoration: underline;
+            /*text-decoration: underline;*/
         }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
 </head>
 <body>
 <p style="text-align: center;">欢迎来到鹰之旅项目聊天室😎，点击对方名字和id可以私聊😊</p>
@@ -77,7 +80,6 @@
     const messagesDiv = document.getElementById("messages");
     const inputMessage = document.getElementById("inputMessage");
 
-
     //WebSocket 连接建立后的回调函数。在该回调函数中，打印一条消息到控制台表示连接已经打开。
     socket.onopen = function(event) {
         console.log("WebSocket connection opened.");
@@ -90,15 +92,22 @@
         const message = data.Message;
         const username = data.Username;
         const userid = data.Userid;
+        const sendtime = data.SendTime
+        let sendtimeDate = new Date(sendtime);
+        // 从 Date 对象中提取小时和分钟
+        let hour = sendtimeDate.getHours();
+        let minute = sendtimeDate.getMinutes();
 
         console.log("Received message:", message);
         // 将接收到的消息添加到网页上
-        messagesDiv.innerHTML += `<div>[<span class="user" onclick="startP2P('${userid}', '${username}')">${userid} - ${username}</span>] ${message}</div>`;
+        messagesDiv.innerHTML += `<div>${hour}:${minute} [<span class="user" onclick="startP2P('${userid}', '${username}')"> ${username} </span>]  : ${message}</div>`;
     };
 
     //WebSocket 连接关闭后的回调函数。在该回调函数中，打印一条消息到控制台表示连接已经关闭。
     socket.onclose = function(event) {
         console.log("WebSocket connection closed.");
+        alert("身份验证过期，请重新登录")
+        window.location.href = "/login";
     };
 
     function sendMessage() {
@@ -111,15 +120,17 @@
             inputMessage.value = "";
             messagesDiv.innerHTML += `
           <div>
-            [我]:
+            [ 我 ]:
             ${message}
           </div>`;
         }
     }
 
-    function startP2P(taruserid, tarusername) {
-        window.location.href = "http://127.0.0.1:9090/p2pChat?taruserid="+taruserid;
+    function startP2P(taruserid) {
+        window.location.href = "p2pChat?taruserid="+taruserid;
     }
+
+
 </script>
 </body>
 </html>

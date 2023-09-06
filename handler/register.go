@@ -33,10 +33,16 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		if ret == 1 {
 			resp = &HttpCode{
 				Code:    10002,
-				Message: "注册失败,用户已存在",
+				Message: "注册失败,用户账号存在，请重新输入",
 				Data:    struct{}{},
 			}
 		} else if ret == 2 {
+			resp = &HttpCode{
+				Code:    10002,
+				Message: "注册失败,用户昵称存在，不能重名,请重新输入",
+				Data:    struct{}{},
+			}
+		} else if ret == 3 {
 			resp = &HttpCode{
 				Code:    10003,
 				Message: "注册失败,请重新注册",
@@ -68,6 +74,12 @@ func Registered(req *register) int {
 		return 1
 	}
 
+	sql = "SELECT Id,UserName,Name FROM user WHERE Name = ?"
+	err = GlobalConn.QueryRowCtx(context.Background(), user, sql, req.Name)
+	if err == nil {
+		return 2
+	}
+
 	//var worker *Worker
 	worker := tools.NewWorker(001, 002)
 	//ID:=gg.NextID()
@@ -78,8 +90,7 @@ func Registered(req *register) int {
 	sql = "INSERT INTO user (`Id`, `UserName`, `PassWord`, `Name`) VALUES (?, ?, ?,?)"
 	r, err := GlobalConn.ExecCtx(context.Background(), sql, newId, req.Username, req.Password, req.Name)
 	if err != nil {
-		panic(err)
-		return 2
+		return 3
 	}
 	fmt.Println(r.RowsAffected())
 	return 0

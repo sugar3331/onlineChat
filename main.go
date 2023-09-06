@@ -2,12 +2,14 @@ package main
 
 import (
 	im "OnlineChat/handler"
+	"OnlineChat/tools"
 	"log"
 	"net/http"
 )
 
 func main() {
 	im.NewMysqlInit()
+	tools.MongodbInit()
 	http.HandleFunc("/publicChatHandler", im.PublicChatHandler)
 	http.HandleFunc("/p2pChatHandler", im.P2PChatHandler)
 	http.HandleFunc("/login", im.Login)

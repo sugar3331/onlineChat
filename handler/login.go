@@ -23,9 +23,11 @@ const (
 var GlobalConn sqlx.SqlConn
 
 func NewMysqlInit() {
-	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local", "root", "hawk123", "1.94.27.198:3306", "hawk")
-	conn := sqlx.NewMysql(dsn)
-	GlobalConn = conn
+	go func() {
+		dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local", "root", "hawk123", "1.94.27.198:3306", "hawk")
+		conn := sqlx.NewMysql(dsn)
+		GlobalConn = conn
+	}()
 }
 
 type login struct {

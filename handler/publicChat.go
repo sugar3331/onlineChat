@@ -2,12 +2,16 @@ package im
 
 import (
 	"OnlineChat/tools"
+	"context"
 	"fmt"
 	"github.com/gorilla/websocket"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"html/template"
 	"log"
 	"net/http"
 	"sync"
+	"time"
 )
 
 type Client struct {
@@ -30,6 +34,7 @@ type fullMessage struct {
 	Message  string
 	Username string
 	Userid   string
+	SendTime time.Time
 }
 
 func PublicChat(w http.ResponseWriter, r *http.Request) {
@@ -76,6 +81,8 @@ func PublicChatHandler(w http.ResponseWriter, r *http.Request) {
 		// 连接断开时从clients列表移除该连接
 		clients.Delete(client)
 	}()
+	//从mongodb里面读缓存
+	go sendRecentMessages(client)
 	// 处理WebSocket连接
 	for {
 		// 读取消息
@@ -85,15 +92,57 @@ func PublicChatHandler(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 		log.Println("Received message:", string(msg))
+		sendtimeNow := time.Now()
 		fullMe := fullMessage{
 			Message:  string(msg),
 			Username: username,
 			Userid:   userid,
+			SendTime: sendtimeNow,
 		}
 		log.Println("开始发消息，用户id: " + userid + ":" + string(msg))
+		go saveMessageToMongoDB(fullMe)
 		// 广播消息给所有客户端
 		go broadcastMessage(messageType, fullMe, client)
 	}
+}
+
+func sendRecentMessages(client *Client) {
+	opts := options.Find().SetSort(bson.D{{"_id", -1}}).SetLimit(30)
+	filter := bson.D{{}}
+	collection := tools.GolbalMogodb.Database("ImChat").Collection("publicChat")
+	cursor, err := collection.Find(context.TODO(), filter, opts)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	var recentMessages []fullMessage
+	for cursor.Next(context.TODO()) {
+		var message fullMessage
+		if err := cursor.Decode(&message); err != nil {
+			log.Println(err)
+			break
+		}
+		recentMessages = append(recentMessages, message)
+	}
+
+	// 倒序发送最近的 30 条记录给客户端
+	for i := len(recentMessages) - 1; i >= 0; i-- {
+		err := client.conn.WriteJSON(recentMessages[i])
+		if err != nil {
+			log.Println(err)
+			break
+		}
+	}
+}
+
+func saveMessageToMongoDB(msg fullMessage) error {
+	collection := tools.GolbalMogodb.Database("ImChat").Collection("publicChat")
+	_, err := collection.InsertOne(context.Background(), msg)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // broadcastMessage 服务端把用户发送的消息推送给所有在线用户的广播函数

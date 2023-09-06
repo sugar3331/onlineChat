@@ -34,7 +34,7 @@
             .then(function (response) {
                 alert(response.data.message);
                 if (response.data.code === 0){
-                    window.location.href = "http://127.0.0.1:9090/login";
+                    window.location.href = "login";
                 }
                 // 根据返回的状态码跳转到登录页面或其他操作
             })
