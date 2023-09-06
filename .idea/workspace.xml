@@ -5,16 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dacecc57-ccdf-400f-b52a-20d22c42c0e3" name="更改" comment="2">
-      <change afterPath="$PROJECT_DIR$/tools/mongodb.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handler/login.go" beforeDir="false" afterPath="$PROJECT_DIR$/handler/login.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handler/p2pChat.go" beforeDir="false" afterPath="$PROJECT_DIR$/handler/p2pChat.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handler/publicChat.go" beforeDir="false" afterPath="$PROJECT_DIR$/handler/publicChat.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handler/register.go" beforeDir="false" afterPath="$PROJECT_DIR$/handler/register.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/chat.html" beforeDir="false" afterPath="$PROJECT_DIR$/static/chat.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/static/login.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/p2pChat.html" beforeDir="false" afterPath="$PROJECT_DIR$/static/p2pChat.html" afterDir="false" />

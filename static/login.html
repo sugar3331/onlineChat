@@ -3,13 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <title>登录界面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #008cba;
+            color: #ffffff;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: #006d8b;
+        }
+
+        .registerButton {
+            margin-top: 10px;
+            background-color: #ff6f00;
+        }
+
+        .registerButton:hover {
+            background-color: #ff8f00;
+        }
+    </style>
 </head>
 <body>
 <h1>登录</h1>
-<input type="text" id="usernameInput" placeholder="用户名" />
-<input type="password" id="passwordInput" placeholder="密码" />
-<button onclick="login()">登录</button>
-<button onclick="goToRegisterPage()">没有账号？去注册</button>
+<div class="container">
+    <input type="text" id="usernameInput" placeholder="用户名" />
+    <input type="password" id="passwordInput" placeholder="密码" />
+    <button onclick="login()">登录</button>
+    <button class="registerButton" onclick="goToRegisterPage()">没有账号？去注册</button>
+</div>
 <script>
     function login() {
         const username = document.getElementById("usernameInput").value;
@@ -35,10 +94,10 @@
 
                     const accessToken = result.data.access_token;
                     // 存储 AccessToken 到本地存储
-                    localStorage.setItem("Authorization", `${accessToken}`);
+                    localStorage.setItem("Authorization", accessToken);
                     console.log("AccessToken: ", accessToken);
                     // 跳转到聊天界面，并带上Authorization参数
-                        window.location.href = "/publicChat";
+                    window.location.href = "/publicChat?accessToken=" + accessToken;
                 } else { // 登录失败
                     alert("登录失败");
                 }

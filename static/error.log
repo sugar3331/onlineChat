@@ -1,0 +1,58 @@
+[2023-09-06 20:20:18][DEBUG] - Traceback (most recent call last):
+  File "/www/server/panel/pyenv/lib/python3.7/site-packages/urllib3/connectionpool.py", line 445, in _make_request
+    six.raise_from(e, None)
+  File "<string>", line 3, in raise_from
+  File "/www/server/panel/pyenv/lib/python3.7/site-packages/urllib3/connectionpool.py", line 440, in _make_request
+    httplib_response = conn.getresponse()
+  File "/www/server/panel/pyenv/lib/python3.7/http/client.py", line 1369, in getresponse
+    response.begin()
+  File "/www/server/panel/pyenv/lib/python3.7/http/client.py", line 310, in begin
+    version, status, reason = self._read_status()
+  File "/www/server/panel/pyenv/lib/python3.7/http/client.py", line 271, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/www/server/panel/pyenv/lib/python3.7/socket.py", line 589, in readinto
+    return self._sock.recv_into(b)
+  File "/www/server/panel/pyenv/lib/python3.7/ssl.py", line 1071, in recv_into
+    return self.read(nbytes, buffer)
+  File "/www/server/panel/pyenv/lib/python3.7/ssl.py", line 929, in read
+    return self._sslobj.read(len, buffer)
+socket.timeout: The read operation timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/www/server/panel/pyenv/lib/python3.7/site-packages/requests/adapters.py", line 449, in send
+    timeout=timeout
+  File "/www/server/panel/pyenv/lib/python3.7/site-packages/urllib3/connectionpool.py", line 756, in urlopen
+    method, url, error=e, _pool=self, _stacktrace=sys.exc_info()[2]
+  File "/www/server/panel/pyenv/lib/python3.7/site-packages/urllib3/util/retry.py", line 531, in increment
+    raise six.reraise(type(error), error, _stacktrace)
+  File "/www/server/panel/pyenv/lib/python3.7/site-packages/urllib3/packages/six.py", line 735, in reraise
+    raise value
+  File "/www/server/panel/pyenv/lib/python3.7/site-packages/urllib3/connectionpool.py", line 706, in urlopen
+    chunked=chunked,
+  File "/www/server/panel/pyenv/lib/python3.7/site-packages/urllib3/connectionpool.py", line 447, in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+  File "/www/server/panel/pyenv/lib/python3.7/site-packages/urllib3/connectionpool.py", line 337, in _raise_timeout
+    self, url, "Read timed out. (read timeout=%s)" % timeout_value
+urllib3.exceptions.ReadTimeoutError: HTTPSConnectionPool(host='api.bt.cn', port=443): Read timed out. (read timeout=6)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/www/server/panel/class/http_requests.py", line 104, in post
+    result = requests.post(url,data,timeout=timeout,headers=headers,verify=verify)
+  File "/www/server/panel/pyenv/lib/python3.7/site-packages/requests/api.py", line 119, in post
+    return request('post', url, data=data, json=json, **kwargs)
+  File "/www/server/panel/pyenv/lib/python3.7/site-packages/requests/api.py", line 61, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/www/server/panel/pyenv/lib/python3.7/site-packages/requests/sessions.py", line 542, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/www/server/panel/pyenv/lib/python3.7/site-packages/requests/sessions.py", line 655, in send
+    r = adapter.send(request, **kwargs)
+  File "/www/server/panel/pyenv/lib/python3.7/site-packages/requests/adapters.py", line 529, in send
+    raise ReadTimeout(e, request=request)
+requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='api.bt.cn', port=443): Read timed out. (read timeout=6)
+
+[2023-09-06 20:20:49][DEBUG] - 开始更新SSH登录日志...
+[2023-09-06 20:20:49][DEBUG] - 更新ssh日志成功

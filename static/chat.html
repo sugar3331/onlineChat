@@ -19,7 +19,7 @@
         }
 
         #messages {
-            height: 300px;
+            height: 600px;
             overflow-y: scroll;
             margin-bottom: 10px;
             padding: 10px;
@@ -74,9 +74,22 @@
 <script>
     const socketAccessToken = localStorage.getItem("Authorization");
     console.log("AccessToken: ", socketAccessToken);
+    // 获取当前请求的URL
+    var url = new URL(window.location.href);
+    // 解析URL参数
+    var params = new URLSearchParams(url.search);
+    // 获取userid参数的值
+    var accessToken = params.get("accessToken");
+    // 声明socket变量，在后续的条件分支中进行赋值
+    let socket;
 
-    //下面是建立websocket连接
-    const socket = new WebSocket("ws://localhost:9090/publicChatHandler?token="+socketAccessToken);
+    if (!socketAccessToken) {
+        // 如果本地存储的 AccessToken 为空，则使用查询参数中的 accessToken 建立 WebSocket 连接
+        socket = new WebSocket("ws://localhost:9090/publicChatHandler?token=" + accessToken);
+    } else {
+        // 否则，使用本地存储的 AccessToken 建立 WebSocket 连接
+        socket = new WebSocket("ws://localhost:9090/publicChatHandler?token=" + socketAccessToken);
+    }
     const messagesDiv = document.getElementById("messages");
     const inputMessage = document.getElementById("inputMessage");
 
@@ -127,7 +140,7 @@
     }
 
     function startP2P(taruserid) {
-        window.location.href = "p2pChat?taruserid="+taruserid;
+        window.location.href = "p2pChat?taruserid="+taruserid+"&accessToken="+accessToken;
     }
 
 

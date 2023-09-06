@@ -55,6 +55,24 @@
             background-color: #006d8b;
         }
 
+        .publicChatButton {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: #ff6f00;
+            color: #ffffff;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
+        }
+
+        .publicChatButton:hover {
+            background-color: #ff8f00;
+        }
+
         .user {
             cursor: pointer;
             color: #008cba;
@@ -68,6 +86,7 @@
     <div class="messages" id="messages"></div>
     <input type="text" class="inputMessage" id="inputMessage" />
     <button class="sendButton" onclick="sendMessage()">Send</button>
+    <button class="publicChatButton" onclick="goToPublicChat()">公共聊天室</button>
 </div>
 
 <script>
@@ -75,17 +94,25 @@
     console.log("AccessToken: ", socketAccessToken);
     // 获取当前请求的URL
     var url = new URL(window.location.href);
-
     // 解析URL参数
     var params = new URLSearchParams(url.search);
-
     // 获取userid参数的值
     var taruserid = params.get("taruserid");
-
+    var accessToken = params.get("accessToken")
     console.log(taruserid); // 输出userid参数的值
 
     // 下面是建立websocket连接
-    const socket = new WebSocket("ws://localhost:9090/p2pChatHandler?taruserid="+taruserid+"&token="+socketAccessToken);
+    // 声明socket变量，在后续的条件分支中进行赋值
+    let socket;
+
+    if (!socketAccessToken) {
+        // 如果本地存储的 AccessToken 为空，则使用查询参数中的 accessToken 建立 WebSocket 连接
+        socket = new WebSocket("ws://localhost:9090/p2pChatHandler?taruserid="+taruserid+"&token="+accessToken);
+    } else {
+        // 否则，使用本地存储的 AccessToken 建立 WebSocket 连接
+        socket = new WebSocket("ws://localhost:9090/p2pChatHandler?taruserid="+taruserid+"&token="+socketAccessToken);
+    }
+
     const messagesDiv = document.getElementById("messages");
     const inputMessage = document.getElementById("inputMessage");
 
@@ -117,7 +144,7 @@
     socket.onclose = function(event) {
         console.log("WebSocket connection closed.");
         alert("建立连接失败😶‍🌫️，请返回主页面刷新(不能与自己聊天🤐)")
-        window.location.href = "/publicChat";
+        window.location.href = "/publicChat?accessToken="+accessToken;
     };
 
     function sendMessage() {
@@ -136,7 +163,9 @@
         }
     }
 
-
+    function goToPublicChat() {
+        window.location.href = "/publicChat?accessToken="+accessToken;
+    }
 
 </script>
 </body>
